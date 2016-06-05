@@ -88,6 +88,7 @@ public class Vision {
 			SmarterDashboard.putNumber("HOLE-AREA", areas[toShoot]);
 			SmarterDashboard.putNumber("HOLE-DISTANCE", distances[toShoot]);
 			SmarterDashboard.putNumber("HOLE-CENTER", tempCenter);
+			Robot.update.get("fromcenter").set((double) tempCenter);
 			SmartDashboard.putNumber("DISTANCE_FROM_CENTER", tempCenter);
 			SmarterDashboard.putNumber("HOLE-SOLITIY", holeSolids[toShoot]);
 			area = areas[toShoot];

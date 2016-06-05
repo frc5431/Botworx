@@ -100,6 +100,7 @@ public class Shooter {
 		intakeMotor.set(speed);
 		SmarterDashboard.putBoolean("intake", speed != 0);
 		SmarterDashboard.putBoolean("INTAKE-REVERSE", speed < 0);
+		Robot.update.get("intake").set((double) speed);
 	}
 
 	public double getIntakeSpeed() {

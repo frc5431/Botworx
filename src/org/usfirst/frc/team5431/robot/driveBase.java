@@ -155,7 +155,7 @@ public class driveBase {
 	 * @param right
 	 *            Power to left motor. From -1 to 1.
 	 */
-	public static void drive(double left, double right) {
+	public void drive(double left, double right) {
 		tankDriveBase.tankDrive(left, right);
 		SmarterDashboard.putNumber("LEFT-DRIVE", left);
 		SmarterDashboard.putNumber("RIGHT-DRIVE", right);

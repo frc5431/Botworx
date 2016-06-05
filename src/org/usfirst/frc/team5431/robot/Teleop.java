@@ -34,6 +34,8 @@ public class Teleop {
 		SmarterDashboard.putNumber("MANUALDRIVE", ((-input.joystickYVal/2.0)*0.5)+0.75);
 		SmarterDashboard.putNumber("AUTO-AIM-SPEED", SwitchCase.cameraVision.getRPMS());
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
+		Robot.update.get("lDrive").set((double) input.xboxLeftJoystickVal);
+		Robot.update.get("rDrive").set((double) input.xboxRightJoystickVal);
 		if(input.xboxLeftJoystickVal < -0.2 || input.xboxRightJoystickVal < -0.2 
 				|| input.xboxLeftJoystickVal > 0.2 || input.xboxRightJoystickVal > 0.2) currentAutoAimState = 0;
 		
@@ -86,6 +88,7 @@ public class Teleop {
 			}
 		}
 		SmarterDashboard.putBoolean("boulder", ballIn);
+		Robot.update.get("ballIn").set((boolean) ballIn);
 		/*//Commented due to conflict between driver/shooter control over intake 
 		if(ballIn){
 			SmartDashboard.putNumber("Bug", -1);
@@ -140,10 +143,12 @@ public class Teleop {
 		if(input.xboxBLeft){
 			Robot.drivebase.chopperUp();
 			SmarterDashboard.putBoolean("CHOPPERS",false);
+			Robot.update.get("choppers").set((boolean) false);
 		}
 		//else if(input.joystickButton7){
 		else if(input.xboxBRight){
 			SmarterDashboard.putBoolean("CHOPPERS",true);
+			Robot.update.get("choppers").set((boolean) true);
 			Robot.drivebase.chopperDown();
 		}
 		SmartDashboard.putBoolean("intakeon", intakeon);
