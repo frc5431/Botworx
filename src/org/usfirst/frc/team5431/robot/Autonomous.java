@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Usaid Malik
  */
 public class Autonomous {
-	private double gyroTurnAngle = 0;
+	//private double gyroTurnAngle = 0;
 	public static int driveForwardState = 0;
 	private int driveForwardGyroState = 0;
 	private int touchForwardState = 0;
@@ -21,14 +21,14 @@ public class Autonomous {
 	
 	public static boolean autoAIMState = false;
 	public static boolean seeOnlyTowerState = false;
-	private static long forwardGyro_neededTime = 0;
-	private static long forwardGyro_landTime = 0;
-	private static long forwardGyro_landTurn = 0;
-	private static long FlyWheelTimer = 0;
+	//private static long forwardGyro_neededTime = 0;
+	//private static long forwardGyro_landTime = 0;
+	//private static long forwardGyro_landTurn = 0;
+	//private static long FlyWheelTimer = 0;
 	public static int currAIM = 1;
 	private long crossMoatTimer = 0;
 	private static double[] driveDistance = { 0, 0 };
-	private static double[] off = { 0.0, 0.0 };
+	//private static double[] off = { 0.0, 0.0 };
 
 	private final double[] speedToOuterWork = { 0.65, 0.65 }, speedToCrossMoat = { 1, 1 };
 	
@@ -36,7 +36,8 @@ public class Autonomous {
 	public static int stationNumber = 1;
 
 	private static final double distanceToOuterWork = 48, distanceToCrossWork = 135, // 128
-			distanceToCrossRough = 130, distanceToSeeOnlyTower = 12, forwardGyro_barelyCross = 122, forwardGyro_barelyRough = 132, forwardGyro_barelyRock = 150;// 122
+			 distanceToSeeOnlyTower = 12;
+			//distanceToCrossRough = 130, forwardGyro_barelyCross = 122, forwardGyro_barelyRough = 132, forwardGyro_barelyRock = 150;// 122
 
 	public static enum FirstMove {
 		StandStill, TouchOuterWork, Lowbar, RockWall, RoughTerrain, Portcullis, ChevalDeFrise, Moat;
@@ -57,7 +58,7 @@ public class Autonomous {
 		driveBase.drive(-speeds[0], -speeds[1]);
 	}
 
-	private void touchForward() {
+	/*private void touchForward() {
 
 		if ((driveDistance[0] < distanceToOuterWork || driveDistance[1] < distanceToOuterWork)
 				&& driveForwardState == 0) {
@@ -68,7 +69,7 @@ public class Autonomous {
 		}
 
 		// touchForwardState = SwitchCase.driveForward(touchForwardState, 72);
-	}
+	}*/
 
 	private void PorticShoot() {
 		driveDistance = Robot.drivebase.getEncDistance();
@@ -113,7 +114,7 @@ public class Autonomous {
 
 	}
 
-	private void LowbarShoot() {
+	/*private void LowbarShoot() {
 		if ((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork)
 				&& driveForwardState == 0) {
 			// curveFix(speedToOuterWork);
@@ -165,7 +166,7 @@ public class Autonomous {
 			driveForwardState = 1;
 		}
 
-	}
+	}*/
 
 	private void crossRockWall() {
 		driveDistance = Robot.drivebase.getEncDistance();

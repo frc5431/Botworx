@@ -3,7 +3,6 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,7 +30,7 @@ public class Robot extends IterativeRobot {
 	enum AutoTask{ Lowbar,Rockwall,RoughTerrain,Cheval,Porticullis,Reach,None};
 	static AutoTask currentAuto;
 	static AnalogGyro gyro;
-	private static final double gyroSensitiviy=0.001661;
+	//private static final double gyroSensitiviy=0.001661;
 
 	public double angleToTurnTo = 0;
 	public int distanceToGoTo = 0;
@@ -46,8 +45,10 @@ public class Robot extends IterativeRobot {
 	public static double startGyroAngle;
 	public final static Map<String, Hashy> update = new HashMap<>();
 	
-	private static final double distanceToOuterWork = 48, distanceToCrossWork = 135, // 128
-			distanceToCrossRough = 130, distanceToSeeOnlyTower = 12, forwardGyro_barelyCross = 152, forwardGyro_barelyRough = 132, forwardGyro_barelyRock = 150, forwardGyro_chevalCross = 80;// 122
+	private static final double //distanceToOuterWork = 48, distanceToCrossWork = 135, // 128
+			//distanceToCrossRough = 130, distanceToSeeOnlyTower = 12, 
+			forwardGyro_barelyCross = 152, forwardGyro_barelyRough = 132, 
+			forwardGyro_barelyRock = 150, forwardGyro_chevalCross = 80;// 122
 	
 	static {
 		update.put("ballIn", new Hashy(false));
@@ -161,7 +162,7 @@ public class Robot extends IterativeRobot {
     	currentAuto = AutoTask.valueOf(SmarterDashboard.getString("AUTO-SELECTED", "Lowbar"));
  		//SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
  		drivebase.resetDrive();
- 		drivebase.drive(0.0, 0.0);
+ 		driveBase.drive(0.0, 0.0);
  		lowbarAutonState= 0;
  		autonOtherLowbarState = 0;
  		autonPorticullisState = 0;
@@ -278,7 +279,7 @@ public class Robot extends IterativeRobot {
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.periodic();
     	drivebase.resetDrive();
-    	drivebase.drive(0.0, 0.0);
+    	driveBase.drive(0.0, 0.0);
     	//SwitchCase.moveAmount = 0.468;
 //    	Autonomous.autoAIMState = false;
 //    	Autonomous.currAIM = 0;

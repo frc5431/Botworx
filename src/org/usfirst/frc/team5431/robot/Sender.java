@@ -1,5 +1,4 @@
 package org.usfirst.frc.team5431.robot;
-import java.io.*;
 import java.net.*;
 
 public class Sender {

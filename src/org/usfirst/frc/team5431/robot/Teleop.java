@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5431.robot;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -13,12 +12,12 @@ public class Teleop {
 	private static int prevFlywheel = 0;
 	private static int prevIntakeIn = 0;
 	private static int prevIntakeOut = 0;
-	private static int prevIntakeShoot = 0;
+	//private static int prevIntakeShoot = 0;
 	public static int currentShootState = 0;
 	private static int currentAutoAimState = 0;
-	private static int currentClimbState = 0;
-	private static int currentShootManualState = 0;
-	private static final double[] offState = {0.0, 0.0};
+	//private static int currentClimbState = 0;
+	//private static int currentShootManualState = 0;
+	//private static final double[] offState = {0.0, 0.0};
 	private static boolean ballIn = false;
 	private static int flywheelspeed=0;
 	private static boolean manualEnable = false;
@@ -33,7 +32,7 @@ public class Teleop {
 		
 		SmarterDashboard.putNumber("MANUALDRIVE", ((-input.joystickYVal/2.0)*0.5)+0.75);
 		SmarterDashboard.putNumber("AUTO-AIM-SPEED", SwitchCase.cameraVision.getRPMS());
-		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
+		driveBase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
 		Robot.update.get("lDrive").set((double) input.xboxLeftJoystickVal);
 		Robot.update.get("rDrive").set((double) input.xboxRightJoystickVal);
 		if(input.xboxLeftJoystickVal < -0.2 || input.xboxRightJoystickVal < -0.2 
@@ -116,8 +115,8 @@ public class Teleop {
 		if(input.joystickButton5 || input.joystickButton11){
 			currentAutoAimState = -1;
 			currentShootState = -1;
-			currentShootManualState = -1;
-			currentClimbState=-1;
+			//currentShootManualState = -1;
+			//currentClimbState=-1;
 			manualEnable = false;
 			double off[] = {0, 0};
 			Robot.flywheels.setFlywheelSpeed(off);
@@ -132,7 +131,7 @@ public class Teleop {
 		SmartDashboard.putNumber("Flywheel Power", getOver);
 		SmartDashboard.putNumber("Y Joystick", input.joystickYVal);
 		SmarterDashboard.putNumber("POWER", getOver);
-		double[] curRPM = Robot.flywheels.getRPM();
+		//double[] curRPM = Robot.flywheels.getRPM();
 		SwitchCase.cameraVision.getRPMS();
 		
 		if(manualEnable) {

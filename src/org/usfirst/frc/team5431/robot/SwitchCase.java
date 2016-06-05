@@ -36,7 +36,7 @@ public class SwitchCase {
 	private static boolean inAuto = false;
 	public static final double moveAmount = 0.455;//.42 for comp
 	public static int checkAmount = 3;
-	private static int timesCount = 0;
+	//private static int timesCount = 0;
 	public static boolean shotTheBall = false;
 	private static final double percentRange = 0.02;
 	
@@ -64,13 +64,13 @@ public class SwitchCase {
 			break;
 		case 1:
 			driveForwardDistance = wheelCircum * distance;
-			Robot.drivebase.drive(.75, .75);
+			driveBase.drive(.75, .75);
 			state = 2;
 			break;
 		case 2:
 			encodersDistance = Robot.drivebase.getEncDistance();
 			if (encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance) {
-				Robot.drivebase.drive(0.0, 0.0);
+				driveBase.drive(0.0, 0.0);
 				state = 3;
 			}
 			break;
@@ -90,23 +90,23 @@ public class SwitchCase {
 		case 1:
 			driveForwardDistance = wheelCircum * distancetocrosswork;
 			//Robot.gyro.reset();
-			Robot.drivebase.drive(-.75, -.75);
+			driveBase.drive(-.75, -.75);
 			state = 2;
 		case 2:
 			encodersDistance = Robot.drivebase.getEncDistance();
 			if (encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance) {
-				Robot.drivebase.drive(0.0, 0.0);
+				driveBase.drive(0.0, 0.0);
 				state = 3;
 			}
 			else{
 				/*if(Robot.gyro.getAngle() > 1){
-					Robot.drivebase.drive(-.76, -.75);
+					driveBase.drive(-.76, -.75);
 				}
 				else if(Robot.gyro.getAngle() < -1){
-					Robot.drivebase.drive(-.75, -.76);
+					driveBase.drive(-.75, -.76);
 				}
 				else{
-					Robot.drivebase.drive(-.75, -.75);
+					driveBase.drive(-.75, -.75);
 				}*/
 			}
 		case 3:
@@ -147,11 +147,11 @@ public class SwitchCase {
 			if (Vision.distance > 80 && Vision.distance < 94) {
 				pass = true;
 			} else if (Vision.distance < 94) {
-				Robot.drivebase.drive(0.7, 0.7);
+				driveBase.drive(0.7, 0.7);
 				state = 1;
 				pass = false;
 			} else if (Vision.distance > 80) {
-				Robot.drivebase.drive(-0.7, -0.7);
+				driveBase.drive(-0.7, -0.7);
 				state = 1;
 				pass = false;
 			} else {
@@ -159,7 +159,7 @@ public class SwitchCase {
 			} *//*
 				 * else if (Vision.manVals[0] == 5) {// || Vision.manVals[1] ==
 				 * 5){ } SmarterDashboard.putString("ERROR",
-				 * "It's too close and too far"); Robot.drivebase.drive(0, 0);
+				 * "It's too close and too far"); driveBase.drive(0, 0);
 				 * state = abortAutoAim;
 				 * 
 				 * }
@@ -178,15 +178,15 @@ public class SwitchCase {
 					 * Timer.delay(0.1); }
 					 */
 				} else if (Vision.manVals[0] == 1) {
-					Robot.drivebase.drive(-moveAmount, moveAmount);
+					driveBase.drive(-moveAmount, moveAmount);
 					state = 1;
 				} else if (Vision.manVals[0] == 2) {
-					Robot.drivebase.drive(moveAmount, -moveAmount);
+					driveBase.drive(moveAmount, -moveAmount);
 					state = 1;
 				} else if (Vision.manVals[0] == 5) {// || Vision.manVals[1] ==
 													// 5){
 					SmarterDashboard.putString("ERROR", "It's too close and too far");
-					Robot.drivebase.drive(0, 0);
+					driveBase.drive(0, 0);
 					state = abortAutoAim;
 
 				} else {
@@ -201,9 +201,9 @@ public class SwitchCase {
 		 * if(Vision.manVals[0] != 0)//Make sure turn left + right is alright
 		 * state = 2; else{ state = 4; //autoAimRemoteState = 1;
 		 * //SmartDashboard.putNumber("remoteBugIn", autoAimRemoteState); } } else
-		 * if(Vision.manVals[1] == 1){ Robot.drivebase.drive(-0.55, -0.55);
+		 * if(Vision.manVals[1] == 1){ driveBase.drive(-0.55, -0.55);
 		 * state = 3; } else if(Vision.manVals[1] == 2){
-		 * Robot.drivebase.drive(.55, .55); state = 3; } else state =
+		 * driveBase.drive(.55, .55); state = 3; } else state =
 		 * abortAutoAim; break;
 		 */
 		case 4:
@@ -304,7 +304,7 @@ public class SwitchCase {
 			} else {
 				Robot.flywheels.setIntakeSpeed(1);
 			}
-			Robot.drivebase.drive(0.0, 0.0);
+			driveBase.drive(0.0, 0.0);
 			break;
 		case abortAutoAim:
 			
@@ -327,7 +327,7 @@ public class SwitchCase {
 															// since there is no
 															// camera at the
 															// time of coding
-		double toSetSpeed = shootSpeed + SmarterDashboard.getNumber("OVERDRIVE", 0.0);
+		//double toSetSpeed = shootSpeed + SmarterDashboard.getNumber("OVERDRIVE", 0.0);
 		cameraVision.Update();
 		//SmartDashboard.putNumber("SysTime", System.currentTimeMillis());
 		/*
@@ -498,7 +498,7 @@ public class SwitchCase {
 			{
 				Robot.drivebase.driveController.disable();
 				forwardGyro_landTime = System.currentTimeMillis() + 2000;
-				Robot.drivebase.drive(0.0, 0.0);
+				driveBase.drive(0.0, 0.0);
 				state = -3;//2 for no autoAim, 6 for autoAim
 			} 
 			
@@ -602,9 +602,9 @@ public class SwitchCase {
 			break;
 		case 1:
 			Robot.drivebase.resetDrive();
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			Robot.drivebase.enablePIDCDrive(-0.68, 0.1);
 			state = -1;
 			break;
@@ -637,7 +637,7 @@ public class SwitchCase {
 			if(System.currentTimeMillis() >= FlyWheelTimer) {
 				Robot.drivebase.disablePIDC();
 				//SmartDashboard.putString("CALLEDMAN", "YES");
-				int flySpeed = cameraVision.getSpeed();
+				//int flySpeed = cameraVision.getSpeed();
 				final int[] speedsPIDC = { 2950, 2950 };
 				Robot.flywheels.setPIDSpeed(speedsPIDC);
 				currAIM = SwitchCase.autoAim(currAIM, 2950);
@@ -672,9 +672,9 @@ public class SwitchCase {
 		case 5://Dead state
 			//SmartDashboard.putBoolean("isMoving", Robot.drivebase.ahrs.isMoving());
 			//SmartDashboard.putBoolean("isRotating", Robot.drivebase.ahrs.isRotating());
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			driveBase.drive(0.0, 0.0);
 			break;
 		}
@@ -700,9 +700,9 @@ public class SwitchCase {
 			break;
 		case -17:
 			Robot.drivebase.resetDrive();
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			Robot.drivebase.enablePIDCDrive(-0.68, 0.1);
 			state = -1;
 			break;
@@ -769,9 +769,9 @@ public class SwitchCase {
 		case 5://Dead state
 			//SmartDashboard.putBoolean("isMoving", Robot.drivebase.ahrs.isMoving());
 			//SmartDashboard.putBoolean("isRotating", Robot.drivebase.ahrs.isRotating());
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			driveBase.drive(0.0, 0.0);
 			break;
 		}
@@ -813,7 +813,7 @@ public class SwitchCase {
 			SmartDashboard.putNumber("changeRollMax", changeRollMax);
 			if(Math.abs(changePitchMax) > 2.5 || Math.abs(changeRollMax) > 2.5){
 				Robot.drivebase.driveController.disable();
-				Robot.drivebase.drive(0.0, 0.0);
+				driveBase.drive(0.0, 0.0);
 				state = -15;
 			}
 			break;
@@ -828,9 +828,9 @@ public class SwitchCase {
 			break;
 		case -17:
 			Robot.drivebase.resetDrive();
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			Robot.drivebase.enablePIDCDrive(-0.7, 0.1);
 			state = -1;
 			break;
@@ -897,9 +897,9 @@ public class SwitchCase {
 		case 5://Dead state
 			//SmartDashboard.putBoolean("isMoving", Robot.drivebase.ahrs.isMoving());
 			//SmartDashboard.putBoolean("isRotating", Robot.drivebase.ahrs.isRotating());
-			//SmartDashboard.putBoolean("OnTarget", Robot.drivebase.driveController.onTarget());
-			//SmartDashboard.putNumber("GetError", Robot.drivebase.driveController.getError());
-			//SmartDashboard.putNumber("GetAvgError", Robot.drivebase.driveController.getAvgError());
+			//SmartDashboard.putBoolean("OnTarget", driveBase.driveController.onTarget());
+			//SmartDashboard.putNumber("GetError", driveBase.driveController.getError());
+			//SmartDashboard.putNumber("GetAvgError", driveBase.driveController.getAvgError());
 			driveBase.drive(0.0, 0.0);
 			break;
 		}
