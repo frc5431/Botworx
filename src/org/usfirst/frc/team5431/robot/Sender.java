@@ -30,7 +30,7 @@ public class Sender {
 		DatagramPacket recv = new DatagramPacket(recvData, recvData.length);
 		client.receive(recv);
 		String retState = new String(recv.getData());
-		System.out.println("GOT " + retState);
+		//System.out.println("GOT " + retState);
 		return retState;
 	}
 	

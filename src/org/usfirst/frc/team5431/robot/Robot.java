@@ -3,7 +3,9 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5431.robot.driveBase;
@@ -68,10 +70,14 @@ public class Robot extends IterativeRobot {
 		update.put("accel", new Hashy((new double[] {0, 0, 0})));
 		update.put("towerdistance", new Hashy(0.0f));
 		update.put("fromcenter", new Hashy(0.0f));
+		update.put("battery", new Hashy(0.0f));
+		update.put("pdptemp", new Hashy(0.0f));
+		update.put("lflytemp", new Hashy(new Object()));
+		update.put("rflytemp", new Hashy(new Object()));
 	}
 	
-	final long updatePeriod = 100;
-	final String ipAddr = "";
+	final long updatePeriod = 30;
+	final String ipAddr = "10.100.72.165";
 	final int port = 5830;
 	
 	
@@ -95,15 +101,20 @@ public class Robot extends IterativeRobot {
 
         final Executor thread = Executors.newSingleThreadExecutor();
         thread.execute(() -> {
-        	Sender sender = null;
+        	//Sender sender = null;
+        	ThingWorx worx = new ThingWorx();
+        	PowerDistributionPanel pdp = new PowerDistributionPanel();
+        	try {
+        		Thread.sleep(3000);
+        	} catch(Exception ignored) {}
         	while(true) {
-        		if(sender == null) {
+        		/*if(sender == null) {
                 	try {
         				sender = new Sender(ipAddr, port);
         			} catch (Exception e) {
         				e.printStackTrace();
         			}
-        		}
+        		}*/
         		try {
         		double[] gyro = (double[]) update.get("gyro").get();
         		double[] accel = (double[]) update.get("accel").get();
@@ -126,9 +137,26 @@ public class Robot extends IterativeRobot {
         				.add("fromcenter", JD("fromcenter"))
         				.add("enabled", JD("enabled"))
         				.add("choppers", JD("choppers"))
-        				.add("ballIn", "ballIn")
+        				.add("ballIn", JD("ballIn"))
         				.add("auton", JD("auton"));
-        		sender.put_property("", toSend.toString());
+        		try {
+        			float batvol = (float) pdp.getVoltage();
+        			float pdptemp = (float) pdp.getTemperature();
+        			Robot.update.get("battery").set((float) batvol);
+        			Robot.update.get("pdptemp").set((float) pdptemp);
+        			toSend.add("battery", JD("battery"));
+        			toSend.add("pdptemp", JD("pdptemp"));
+        		} catch(Exception exc) {}
+        		
+        		try {
+        			float lefttemp = (float)((CANTalon) Robot.update.get("lflytemp").get()).getTemperature();
+        			float righttemp = (float)((CANTalon) Robot.update.get("rflytemp").get()).getTemperature();
+        			toSend.add("lflytemp", String.valueOf(lefttemp));
+        			toSend.add("rflytemp", String.valueOf(righttemp));
+        		} catch(Exception exc) {}
+        		
+        		//sender.put_property("", toSend.toString());
+        		worx.put_property(toSend.toString());
         		} catch(Exception err) {
         			err.printStackTrace();
         		}

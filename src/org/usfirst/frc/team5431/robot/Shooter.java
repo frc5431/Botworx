@@ -38,6 +38,8 @@ public class Shooter {
 		leftFW.reverseOutput(true);
 		// rightFW.setInverted(true);
 		// leftFW.setInverted(false);
+		Robot.update.get("lflytemp").set((CANTalon) leftFW);
+		Robot.update.get("rflytemp").set((CANTalon) rightFW);
 		leftFW.enableBrakeMode(false);
 		rightFW.enableBrakeMode(false);
 		leftFW.changeControlMode(TalonControlMode.Speed);
