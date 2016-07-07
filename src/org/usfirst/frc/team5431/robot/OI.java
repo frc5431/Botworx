@@ -24,7 +24,7 @@ public class OI {
 			joystickButton5 = false, joystickButton6 = false, joystickButton7 = false, joystickButton8 = false,
 			joystickButton10 = false, joystickButton11 = false;
 	private static int xboxRightJoy = 1, xboxLeftJoy = 5, xboxButtonA = 1, xboxButtonB = 2, xboxButtonX = 3,
-			xboxButtonY = 4, xboxBumperLeft = 5, xboxBumperRight = 6,
+			/*xboxButtonY = 4,*/ xboxBumperLeft = 5, xboxBumperRight = 6,
 			// Gun joystick
 			joystickPotentiometer = 2, joystickTrigger = 1, joystickButtonLabeled2 = 2, joystickButtonLabeled3 = 3,
 			joystickButtonLabeled4 = 4, joystickButtonLabeled5 = 5, joystickButtonLabeled6 = 6,

@@ -38,6 +38,8 @@ public class Shooter {
 		leftFW.reverseOutput(true);
 		// rightFW.setInverted(true);
 		// leftFW.setInverted(false);
+		Robot.update.get("lflytemp").set((CANTalon) leftFW);
+		Robot.update.get("rflytemp").set((CANTalon) rightFW);
 		leftFW.enableBrakeMode(false);
 		rightFW.enableBrakeMode(false);
 		leftFW.changeControlMode(TalonControlMode.Speed);
@@ -100,6 +102,7 @@ public class Shooter {
 		intakeMotor.set(speed);
 		SmarterDashboard.putBoolean("intake", speed != 0);
 		SmarterDashboard.putBoolean("INTAKE-REVERSE", speed < 0);
+		Robot.update.get("intake").set((double) speed);
 	}
 
 	public double getIntakeSpeed() {

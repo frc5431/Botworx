@@ -905,4 +905,5 @@ public class SwitchCase {
 		}
 		return state;
 	}
+
 }

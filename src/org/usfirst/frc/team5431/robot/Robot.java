@@ -3,11 +3,20 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5431.robot.driveBase;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import org.usfirst.frc.team5431.json.Json;
+import org.usfirst.frc.team5431.json.JsonObject;
 import org.usfirst.frc.team5431.robot.Shooter;
 /**
  * This is the second version of competition code (sans David as per request). This competition code is intended to be a functional
@@ -23,7 +32,7 @@ public class Robot extends IterativeRobot {
 	enum AutoTask{ Lowbar,Rockwall,RoughTerrain,Cheval,Porticullis,Reach,None};
 	static AutoTask currentAuto;
 	static AnalogGyro gyro;
-	private static final double gyroSensitiviy=0.001661;
+	//private static final double gyroSensitiviy=0.001661;
 
 	public double angleToTurnTo = 0;
 	public int distanceToGoTo = 0;
@@ -36,9 +45,45 @@ public class Robot extends IterativeRobot {
 	public boolean autoaim = false;
 	public static final boolean brakeMode = true;    
 	public static double startGyroAngle;
+	public final static Map<String, Hashy> update = new HashMap<>();
 	
-	private static final double distanceToOuterWork = 48, distanceToCrossWork = 135, // 128
-			distanceToCrossRough = 130, distanceToSeeOnlyTower = 12, forwardGyro_barelyCross = 152, forwardGyro_barelyRough = 132, forwardGyro_barelyRock = 150, forwardGyro_chevalCross = 80;// 122
+	private static final double //distanceToOuterWork = 48, distanceToCrossWork = 135, // 128
+			//distanceToCrossRough = 130, distanceToSeeOnlyTower = 12, 
+			forwardGyro_barelyCross = 152, forwardGyro_barelyRough = 132, 
+			forwardGyro_barelyRock = 150, forwardGyro_chevalCross = 80;// 122
+	
+	static {
+		update.put("ballIn", new Hashy(false));
+		update.put("leftFlywheel", new Hashy(0));
+		update.put("rightFlywheel", new Hashy(0));
+		update.put("intake", new Hashy(0));
+		update.put("rDrive", new Hashy(0.0f));
+		update.put("lDrive", new Hashy(0.0f));
+		update.put("leftDistance", new Hashy(0.0f));
+		update.put("rightDistance", new Hashy(0.0f));
+		update.put("driveAverage", new Hashy(0.0f));
+		update.put("choppers", new Hashy(false));
+		update.put("auton", new Hashy(false));
+		update.put("teleop", new Hashy(false));
+		update.put("enabled", new Hashy(false));
+		update.put("gyro", new Hashy((new double[] {0, 0, 0})));
+		update.put("accel", new Hashy((new double[] {0, 0, 0})));
+		update.put("towerdistance", new Hashy(0.0f));
+		update.put("fromcenter", new Hashy(0.0f));
+		update.put("battery", new Hashy(0.0f));
+		update.put("pdptemp", new Hashy(0.0f));
+		update.put("lflytemp", new Hashy(new Object()));
+		update.put("rflytemp", new Hashy(new Object()));
+	}
+	
+	final long updatePeriod = 30;
+	final String ipAddr = "10.100.72.165";
+	final int port = 5830;
+	
+	
+	private String JD(String toPull) {
+		return String.valueOf(update.get(toPull).get());
+	}
 	
     /**
      * This function is run when the robot is first started up and should be
@@ -53,6 +98,72 @@ public class Robot extends IterativeRobot {
         oiInput = new OI(0, 1);
         //gyro = new AnalogGyro(0);
         drivebase.ahrs.reset();
+
+        final Executor thread = Executors.newSingleThreadExecutor();
+        thread.execute(() -> {
+        	//Sender sender = null;
+        	ThingWorx worx = new ThingWorx();
+        	PowerDistributionPanel pdp = new PowerDistributionPanel();
+        	try {
+        		Thread.sleep(3000);
+        	} catch(Exception ignored) {}
+        	while(true) {
+        		/*if(sender == null) {
+                	try {
+        				sender = new Sender(ipAddr, port);
+        			} catch (Exception e) {
+        				e.printStackTrace();
+        			}
+        		}*/
+        		try {
+        		double[] gyro = (double[]) update.get("gyro").get();
+        		double[] accel = (double[]) update.get("accel").get();
+        		JsonObject toSend = Json.object()
+        				.add("xangle", String.valueOf(gyro[0]))
+        				.add("yangle", String.valueOf(gyro[1]))
+        				.add("zangle", String.valueOf(gyro[2]))
+        				.add("xaccel", String.valueOf(accel[0]))
+        				.add("yaccel", String.valueOf(accel[1]))
+        				.add("zaccel", String.valueOf(accel[2]))
+        				.add("towerdistance", JD("towerdistance"))
+        				.add("teleop", JD("teleop"))
+        				.add("rightrpm", JD("rightFlywheel"))
+        				.add("rightdrivepower", JD("rDrive"))
+        				.add("rdistance", JD("rightDistance"))
+        				.add("leftrpm", JD("leftFlywheel"))
+        				.add("leftdrivepower", JD("lDrive"))
+        				.add("ldistance", JD("leftDistance"))
+        				.add("intake", JD("intake"))
+        				.add("fromcenter", JD("fromcenter"))
+        				.add("enabled", JD("enabled"))
+        				.add("choppers", JD("choppers"))
+        				.add("ballIn", JD("ballIn"))
+        				.add("auton", JD("auton"));
+        		try {
+        			float batvol = (float) pdp.getVoltage();
+        			float pdptemp = (float) pdp.getTemperature();
+        			Robot.update.get("battery").set((float) batvol);
+        			Robot.update.get("pdptemp").set((float) pdptemp);
+        			toSend.add("battery", JD("battery"));
+        			toSend.add("pdptemp", JD("pdptemp"));
+        		} catch(Exception exc) {}
+        		
+        		try {
+        			float lefttemp = (float)((CANTalon) Robot.update.get("lflytemp").get()).getTemperature();
+        			float righttemp = (float)((CANTalon) Robot.update.get("rflytemp").get()).getTemperature();
+        			toSend.add("lflytemp", String.valueOf(lefttemp));
+        			toSend.add("rflytemp", String.valueOf(righttemp));
+        		} catch(Exception exc) {}
+        		
+        		//sender.put_property("", toSend.toString());
+        		worx.put_property(toSend.toString());
+        		} catch(Exception err) {
+        			err.printStackTrace();
+        		}
+        		try{Thread.sleep(updatePeriod);}catch(Throwable ignored){}
+        	}
+        });
+        
         //gyro.initGyro();
         //gyro.setSensitivity(gyroSensitiviy);
         //gyro.setSensitivity(.0016594);
@@ -79,12 +190,15 @@ public class Robot extends IterativeRobot {
     	currentAuto = AutoTask.valueOf(SmarterDashboard.getString("AUTO-SELECTED", "Lowbar"));
  		//SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
  		drivebase.resetDrive();
- 		drivebase.drive(0.0, 0.0);
+ 		driveBase.drive(0.0, 0.0);
  		lowbarAutonState= 0;
  		autonOtherLowbarState = 0;
  		autonPorticullisState = 0;
  		autonChevalState = 0;
-
+		Robot.update.get("enabled").set((boolean) true);
+		Robot.update.get("auton").set((boolean) true);
+		Robot.update.get("teleop").set((boolean) false);
+ 		
  		//drivebase.ahrs.zeroYaw();
  		
  		startGyroAngle=drivebase.ahrs.getYaw();
@@ -187,10 +301,13 @@ public class Robot extends IterativeRobot {
     	drivebase.enableBrakeMode();
     	SmarterDashboard.putBoolean("AUTO", false);
     	SmarterDashboard.putBoolean("ENABLED", false);
+		Robot.update.get("enabled").set((boolean) false);
+		Robot.update.get("auton").set((boolean) false);
+		Robot.update.get("teleop").set((boolean) false);
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.periodic();
     	drivebase.resetDrive();
-    	drivebase.drive(0.0, 0.0);
+    	driveBase.drive(0.0, 0.0);
     	//SwitchCase.moveAmount = 0.468;
 //    	Autonomous.autoAIMState = false;
 //    	Autonomous.currAIM = 0;
@@ -211,12 +328,21 @@ public class Robot extends IterativeRobot {
     	//auton.updateStates(currentAuto);
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.putBoolean("AUTO", true);
+    	Robot.update.get("auton").set((boolean) true);
     	SmartDashboard.putNumber("Gyro Angle", drivebase.ahrs.getYaw());
+    	double[] gyroset = {drivebase.ahrs.getPitch(), drivebase.ahrs.getRoll(), drivebase.ahrs.getYaw()};
+    	double[] accelset = {drivebase.ahrs.getVelocityX(), drivebase.ahrs.getVelocityY(), drivebase.ahrs.getVelocityZ()};
+    	Robot.update.get("gyro").set((double[]) gyroset);
+    	Robot.update.get("accel").set((double[]) accelset);
+
     	//Update RPM for fly wheels
         final double[] rpms = flywheels.getRPM();
 		SmarterDashboard.putNumber("FLY-LEFT", rpms[0]);
 		SmarterDashboard.putNumber("FLY-RIGHT", rpms[1]);
+		Robot.update.get("leftFlywheel").set((double) rpms[0]);
+		Robot.update.get("rightFlywheel").set((double) rpms[1]);
 		//SmartDashboard.putBoolean("NAVX CALIBRATING", drivebase.ahrs.isCalibrating());
+		Robot.update.get("towerdistance").set((double) Vision.distance);
 		
 		autonOtherLowbarState = SwitchCase.autonomous(autonOtherLowbarState, angleToTurnTo, distanceToGoTo, shootSpeed, autoaim);
 		lowbarAutonState = SwitchCase.autonomousLowbar(lowbarAutonState, angleToTurnTo, distanceToGoTo, shootSpeed, autoaim);
@@ -237,7 +363,10 @@ public class Robot extends IterativeRobot {
     	drivebase.setRampRate(0);
     	Robot.drivebase.disablePIDC();
     	Robot.drivebase.enableBrakeMode();
-    	Robot.drivebase.ahrs.reset();;
+    	Robot.drivebase.ahrs.reset();
+		Robot.update.get("enabled").set((boolean) true);
+		Robot.update.get("auton").set((boolean) false);
+		Robot.update.get("teleop").set((boolean) true);
     }
     /**
      * This function is called periodically during operator control.
@@ -253,16 +382,26 @@ public class Robot extends IterativeRobot {
         SmarterDashboard.putBoolean("ENABLED", true);
         SmarterDashboard.putBoolean("connection", true);
         
-        //Update RPM for fly wheels
+    	SmartDashboard.putNumber("Gyro Angle", drivebase.ahrs.getYaw());
+    	double[] gyroset = {drivebase.ahrs.getRawGyroX(), drivebase.ahrs.getRawGyroY(), drivebase.ahrs.getRawGyroZ()};
+    	double[] accelset = {drivebase.ahrs.getRawAccelX(), drivebase.ahrs.getRawAccelY(), drivebase.ahrs.getRawAccelZ()};
+    	Robot.update.get("gyro").set((double[]) gyroset);
+    	Robot.update.get("accel").set((double[]) accelset);
+
+    	//Update RPM for fly wheels
         final double[] rpms = flywheels.getRPM();
 		SmarterDashboard.putNumber("FLY-LEFT", rpms[0]);
 		SmarterDashboard.putNumber("FLY-RIGHT", rpms[1]);
-		
+		Robot.update.get("leftFlywheel").set((double) rpms[0]);
+		Robot.update.get("rightFlywheel").set((double) rpms[1]);
 		//Update drivetrain distance
 		final double[] driverpm = drivebase.getEncDistance();
 		SmarterDashboard.putNumber("DRIVE-DISTANCE-LEFT", driverpm[0]);
 		SmarterDashboard.putNumber("DRIVE-DISTANCE-RIGHT", driverpm[1]);
-    	SmarterDashboard.periodic();
+		Robot.update.get("leftDistance").set((double) driverpm[0]);
+		Robot.update.get("rightDistance").set((double) driverpm[1]);
+		Robot.update.get("towerdistance").set((double) Vision.distance);
+		SmarterDashboard.periodic();
     }
 
 	public void testPeriodic() {

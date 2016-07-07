@@ -1,8 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.CANTalon;
 import org.usfirst.frc.team5431.robot.driveBase;
 
 public class autonPIDOutput implements PIDOutput{

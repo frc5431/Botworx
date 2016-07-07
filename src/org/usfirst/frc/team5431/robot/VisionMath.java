@@ -1,17 +1,15 @@
 package org.usfirst.frc.team5431.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class VisionMath {
 
 	// Choose hole options (Total should be 1.0)
-	private static final double areaNum = 0.2, distNum = 0.2, solidNum = 0.4, fromNum = 0.2;
+	//private static final double areaNum = 0.2, distNum = 0.2, solidNum = 0.4, fromNum = 0.2;
 
 	// Distances and resolution values
 	public static final double screenHalf = 160, minDistance = 76, maxDistance = 150, leftTrig = 33,//COMP : 29,
 			/* This is actually the right */ rightTrig = 35;//COMP : 35; // this is actually the left
 
-	private static final double maxArea = 1500, maxSolidity = 100;
+	//private static final double maxArea = 1500, maxSolidity = 100;
 
 	public static volatile double override = 0.0;
 
