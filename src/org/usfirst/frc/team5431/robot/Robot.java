@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.json.JSONObject;
 import org.usfirst.frc.team5431.json.Json;
 import org.usfirst.frc.team5431.json.JsonObject;
 import org.usfirst.frc.team5431.robot.Shooter;
@@ -118,41 +119,41 @@ public class Robot extends IterativeRobot {
         		try {
         		double[] gyro = (double[]) update.get("gyro").get();
         		double[] accel = (double[]) update.get("accel").get();
-        		JsonObject toSend = Json.object()
-        				.add("xangle", String.valueOf(gyro[0]))
-        				.add("yangle", String.valueOf(gyro[1]))
-        				.add("zangle", String.valueOf(gyro[2]))
-        				.add("xaccel", String.valueOf(accel[0]))
-        				.add("yaccel", String.valueOf(accel[1]))
-        				.add("zaccel", String.valueOf(accel[2]))
-        				.add("towerdistance", JD("towerdistance"))
-        				.add("teleop", JD("teleop"))
-        				.add("rightrpm", JD("rightFlywheel"))
-        				.add("rightdrivepower", JD("rDrive"))
-        				.add("rdistance", JD("rightDistance"))
-        				.add("leftrpm", JD("leftFlywheel"))
-        				.add("leftdrivepower", JD("lDrive"))
-        				.add("ldistance", JD("leftDistance"))
-        				.add("intake", JD("intake"))
-        				.add("fromcenter", JD("fromcenter"))
-        				.add("enabled", JD("enabled"))
-        				.add("choppers", JD("choppers"))
-        				.add("ballIn", JD("ballIn"))
-        				.add("auton", JD("auton"));
+        		JSONObject toSend = new JSONObject()
+        				.put("xangle", String.valueOf(gyro[0]))
+        				.put("yangle", String.valueOf(gyro[1]))
+        				.put("zangle", String.valueOf(gyro[2]))
+        				.put("xaccel", String.valueOf(accel[0]))
+        				.put("yaccel", String.valueOf(accel[1]))
+        				.put("zaccel", String.valueOf(accel[2]))
+        				.put("towerdistance", JD("towerdistance"))
+        				.put("teleop", JD("teleop"))
+        				.put("rightrpm", JD("rightFlywheel"))
+        				.put("rightdrivepower", JD("rDrive"))
+        				.put("rdistance", JD("rightDistance"))
+        				.put("leftrpm", JD("leftFlywheel"))
+        				.put("leftdrivepower", JD("lDrive"))
+        				.put("ldistance", JD("leftDistance"))
+        				.put("intake", JD("intake"))
+        				.put("fromcenter", JD("fromcenter"))
+        				.put("enabled", JD("enabled"))
+        				.put("choppers", JD("choppers"))
+        				.put("ballIn", JD("ballIn"))
+        				.put("auton", JD("auton"));
         		try {
         			float batvol = (float) pdp.getVoltage();
         			float pdptemp = (float) pdp.getTemperature();
         			Robot.update.get("battery").set((float) batvol);
         			Robot.update.get("pdptemp").set((float) pdptemp);
-        			toSend.add("battery", JD("battery"));
-        			toSend.add("pdptemp", JD("pdptemp"));
+        			toSend.put("battery", JD("battery"));
+        			toSend.put("pdptemp", JD("pdptemp"));
         		} catch(Exception exc) {}
         		
         		try {
         			float lefttemp = (float)((CANTalon) Robot.update.get("lflytemp").get()).getTemperature();
         			float righttemp = (float)((CANTalon) Robot.update.get("rflytemp").get()).getTemperature();
-        			toSend.add("lflytemp", String.valueOf(lefttemp));
-        			toSend.add("rflytemp", String.valueOf(righttemp));
+        			toSend.put("lflytemp", String.valueOf(lefttemp));
+        			toSend.put("rflytemp", String.valueOf(righttemp));
         		} catch(Exception exc) {}
         		
         		//sender.put_property("", toSend.toString());
