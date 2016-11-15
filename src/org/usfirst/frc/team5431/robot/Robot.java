@@ -16,8 +16,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.json.JSONObject;
-import org.usfirst.frc.team5431.json.Json;
-import org.usfirst.frc.team5431.json.JsonObject;
 import org.usfirst.frc.team5431.robot.Shooter;
 /**
  * This is the second version of competition code (sans David as per request). This competition code is intended to be a functional

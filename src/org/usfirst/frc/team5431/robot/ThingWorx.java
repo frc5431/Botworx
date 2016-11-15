@@ -16,9 +16,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.GetRequest;
-
 public class ThingWorx {
 
 	private HttpsURLConnection connection = null;
